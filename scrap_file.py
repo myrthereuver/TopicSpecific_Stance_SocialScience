@@ -92,31 +92,87 @@ def get_pushshift_data(sub, keyword, time):
 
 post_data = get_pushshift_data(sub= 'europe', keyword = 'climate change', time = "365d")
 
+
 def extract_relevant_info(post_data):
+    df_per_keyword = pd.DataFrame()
+    
     post_ids = []
     title = []
+    body = []
     num_comments = []
+    date_created = []
     permalinks = []
     subreddit = []
+    award_types = []
+    awards_total = []
+    score = []
+    upvote_ratio = []
+    num_crossposts = []
+    flair = []
+    
     for post in post_data: 
         post_ids.append(post['id'])
         title.append(post['title'])
+        #body.append(post['selftext'])
         num_comments.append(post['num_comments'])
+        date_created.append(post['created_utc'])
         permalinks.append(post["permalink"])
         subreddit.append(post['subreddit'])
+        #award_types.append(post['all_awardings'])
+        #awards_total.append(post['total_awards_received'])
+        score.append(post['score'])
+        #upvote_ratio.append(post['upvote_ratio'])
+        #num_crossposts.append(post['num_crossposts'])        
         
-    posts_df['post_id'] = post_ids
-    posts_df['title'] = title
-    posts_df['num_comments'] = num_comments
-    posts_df['permalink'] = permalinks
-    posts_df['subreddit'] = subreddit
+        try: 
+            award_types.append(post['all_awardings'])
+        except: 
+            award_types.append("NA")
+            
+        try: 
+            awards_total.append(post['total_awards_received'])
+        except: 
+            awards_total.append("NA")
+                             
+        try: 
+            upvote_ratio.append(post['upvote_ratio'])
+        except: 
+            upvote_ratio.append("NA")
+        
+        try: 
+            num_crossposts.append(post['num_crossposts'])
+        except: 
+            num_crossposts.append("NA")   
+            
+        try: 
+            body.append(post['selftext'])
+        except: 
+            body.append("NA")
+        
+        try: 
+            flair.append(post['link_flair_richtext'])
+        except: 
+            flair.append("NA")
+            
+
+    df_per_keyword['post_id'] = post_ids
+    df_per_keyword['title'] = title
+    df_per_keyword['body'] = body
+    df_per_keyword['num_comments'] = num_comments
+    df_per_keyword['subreddit'] = subreddit
+    df_per_keyword['date_created'] = date_created    
+    df_per_keyword['flair'] = flair
+    df_per_keyword['upvote_ratio'] = upvote_ratio
+    df_per_keyword['num_crossposts'] = num_crossposts
+    df_per_keyword['permalink'] = permalinks
+    df_per_keyword['awards_total'] = awards_total
+    df_per_keyword['award_types'] = award_types
+    df_per_keyword['score'] = score
     
-
-#extract_relevant_info(post_data)
-        
-
-# Todo: get it to work for all keywords + subreddits
-#           make function that adds each call to dataframe
+    posts_df.append(df_per_keyword, ignore_index = True)
+    return df_per_keyword
+    
+    
 
 
 
