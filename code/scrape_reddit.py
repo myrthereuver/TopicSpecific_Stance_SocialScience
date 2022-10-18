@@ -1,10 +1,8 @@
 import praw 
 from pushshift_py import PushshiftAPI
-import datetime
 import pandas as pd
 import requests
 import json
-
 
 # TO DO: 
 #   praw_ini_file: https://asyncpraw.readthedocs.io/en/stable/getting_started/configuration/prawini.html#praw-ini 
@@ -90,7 +88,7 @@ for sub in subreddits:
     print("=============================================")
     print()
     for keyword in keywords: 
-        post_data = get_pushshift_data(sub = sub, keyword = keyword, time = '365d')
+        post_data = get_pushshift_data(sub = sub, keyword = keyword, time = '1825d')
         if post_data != None: 
             
             cleaned_data = clean_dict(post_data)
@@ -141,39 +139,44 @@ def get_comment_dict(ids):
 
     
 post_ids = posts_df['post_id'].tolist()
-post_ids = post_ids[:25]
 comment_dict = get_comment_dict(post_ids)
-
 
 
 def create_comment_df(comments):
     id_post = []
     coms = []
+    comment_id = []
     for pid, cmnts in comments.items(): 
-        for cmnt in cmnts:
+        #indeces = []
+        count = list(enumerate(cmnts))
+        # Create unique comment ids 
+        for ent in count: 
+            # Take the index of the comment 
+            com_count = str(ent[0])
+            # And concatenate it to the post_id 
+            com_id = str(pid) + "-" + com_count
+            comment_id.append(com_id)
             id_post.append(pid)
-            coms.append(cmnt)
-    return id_post, coms
+            coms.append(ent[1])
+        
+        #for cmnt in cmnts:
+        #    id_post.append(pid)
+        #    coms.append(cmnt)
+    return id_post, comment_id, coms
 
-ids, comments = create_comment_df(comment_dict)
+post_ids, comment_ids, comments = create_comment_df(comment_dict)
 
-comment_df["post_id"] = ids
+comment_df["post_id"] = post_ids
+comment_df["comment_id"] = comment_ids
 comment_df["comment_body"] = comments
         
 
 
-
+comment_df.to_csv("data/comment_data.csv")
 
 # ===================================================================================
 # ================================ SCRAP ============================================
 # ===================================================================================
-
-
-    
-    comments_df['post_id'] = id_post
-    comments_df['comment'] = coms
-
-
 
 
 def scrape_reddit(sub, keyword, time): 
