@@ -159,9 +159,6 @@ def create_comment_df(comments):
             id_post.append(pid)
             coms.append(ent[1])
         
-        #for cmnt in cmnts:
-        #    id_post.append(pid)
-        #    coms.append(cmnt)
     return id_post, comment_id, coms
 
 post_ids, comment_ids, comments = create_comment_df(comment_dict)
@@ -171,41 +168,44 @@ comment_df["comment_id"] = comment_ids
 comment_df["comment_body"] = comments
         
 
-
-comment_df.to_csv("data/comment_data.csv")
-
 # ===================================================================================
-# ================================ SCRAP ============================================
+# ============================= PREPROCESSING =======================================
 # ===================================================================================
 
+# --------------------------------- STEP 1 ----------------------------------
+# Retrieving post information (subreddit and title) for each comment
+# ---------------------------------------------------------------------------
 
-def scrape_reddit(sub, keyword, time): 
-    # obtain pd DataFrame with post info: title, body, 
-    post_data = get_pushshift_data(sub=sub, keyword=keyword, time=time)
+# Extract post_ids from comments Dataframe
+ids_per_comment = comment_df["post_id"].tolist()
+
+# Create new Dataframe with the information we want to add to the comments Dataframe
+extract_this = pd.DataFrame()
+extract_this["post_id"] = posts_df["post_id"]
+extract_this["subreddit"] = posts_df["subreddit"]
+extract_this["title"] = posts_df["title"]
+
+# Transpose the Dataframe and turn it into a lookup dictionary
+lookup = extract_this.set_index('post_id').T.to_dict()
+
+# Now look up the information 
+subs = []
+titles = []
+
+# For the post id that each comment belongs to... 
+for i in ids_per_comment: 
+    # ... find the corresponding subreddit in the lookup dict
+    sub = lookup[i]['subreddit']
+    subs.append(sub)
     
-    if post_data != None: 
-        
-        # clean post data
-        # extract_relevant_info(post_data)
-        keyword_dict = clean_dict(post_data)
-        # posts_df = pd.concat([posts_df, keyword_df])
-        
-        ### Extract corresponding comments
-        
-        #ids_posts = posts_df['post_id'].tolist()
-        #comment_dict = get_comment_dict(ids_posts)
-        
-        ### Create comment dataframe
-        
-        #create_comment_df(comment_dict)
-        
-        
-    else: 
-        print(f"--- '{keyword}' is not present in posts at /r/{sub} ---")
-        print()
+    # ... and find the corresponding title in the lookup dict
+    title = lookup[i]['title']
+    titles.append(title)
+    
+# Add the info to the comments Dataframe 
+comment_df["subreddit"] = subs
+comment_df["post_title"] = titles
 
-for sub in subreddits: 
-    for keyword in keywords: 
-        scrape_reddit(sub = sub, keyword = keyword, time = '365d')
-
+# Save new comment Dataframe
+comment_df.to_csv("data/comment_data.csv") 
 
