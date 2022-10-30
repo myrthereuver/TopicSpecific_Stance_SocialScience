@@ -20,7 +20,7 @@ api = PushshiftAPI(r)
 type(r)
 
 
-
+"""
 
 keywords = ["climate change", "climate goals ","climate activists", "climate top", "climate target", "climate crisis", 
             "climate crises ", "climate protesters", "sustainable", "sustainability", "carbon emissions", "co2 emissions",
@@ -32,6 +32,14 @@ keywords = ["climate change", "climate goals ","climate activists", "climate top
 
 subreddits = ["europe", "europeanunion", "europes"]
 
+"""
+
+keywords = ['climate change']
+subreddits = ['europe']
+
+
+
+
 # ====================================================================================
 # ================================== POSTS ===========================================
 # ====================================================================================
@@ -42,12 +50,12 @@ posts_df = pd.DataFrame(columns = ["id", "subreddit", "title", "num_comments",
                                    "all_awardings",  "total_awards_recieved", 
                                    "full_link", "score"])
 
-def get_pushshift_data(sub, keyword, time):
+def get_pushshift_data(sub, keyword, before, after):
     """
     
     
     """
-    url = "https://api.pushshift.io/reddit/submission/search/?q="+str(keyword)+"&subreddit="+str(sub)+"&after="+str(time)+"&sort=asc&limit=1000000000000000"
+    url = "https://api.pushshift.io/reddit/submission/search/?q="+str(keyword)+"&subreddit="+str(sub)+"&before="+str(before)+"&after="+str(after)+"&sort=asc&limit=1000000000000000"
     # print(url)
     r = requests.get(url)
     try:
@@ -59,7 +67,7 @@ def get_pushshift_data(sub, keyword, time):
     return full_data
 
 
-post_data = get_pushshift_data(sub = 'europe', keyword = 'climate change', time = "30d")
+#post_data = get_pushshift_data(sub = 'europe', keyword = 'climate change', before = "0d", after = "365d")
 
 
 def clean_dict(post_data): 
@@ -78,7 +86,7 @@ def clean_dict(post_data):
 
     return post_data
     
-cleaned_dict = clean_dict(post_data)
+# cleaned_dict = clean_dict(post_data)
 
 data = []
 
@@ -88,7 +96,8 @@ for sub in subreddits:
     print("=============================================")
     print()
     for keyword in keywords: 
-        post_data = get_pushshift_data(sub = sub, keyword = keyword, time = '1825d')
+        #post_data = get_pushshift_data(sub = sub, keyword = keyword, time = '365d')
+        post_data = get_pushshift_data(sub = sub, keyword = keyword, before = "0d", after = "1825d")
         if post_data != None: 
             
             cleaned_data = clean_dict(post_data)
@@ -105,14 +114,17 @@ for post in data:
 
 
 posts_df.rename(columns = {'id':'post_id', 'selftext':'body'}, inplace = True)
-
 posts_df.to_csv("data/post_data.csv")
+
 
 # ====================================================================================
 # ================================ COMMENTS ==========================================
 # ====================================================================================
 
-comment_df = pd.DataFrame(columns = ["post_id", "comment_body"])
+posts_df = pd.read_csv("data/post_data.csv", index_col = 0)
+
+
+comment_df = pd.DataFrame()
  
 """
 def get_comments(data): 
@@ -130,11 +142,21 @@ def get_comment_dict(ids):
     for sub_id in ids: 
         submission = r.submission(id=sub_id)
         sub_comment = []
+        parent_ids = []
+        comment_ids = []
         submission.comments.replace_more(limit=0)
         for comment in submission.comments.list():
             sub_comment.append(comment.body)
+            comment_ids.append(comment.id)
+            parent_ids.append(comment.parent_id)
             
-        comment_dict[sub_id] = sub_comment
+            #print(sub_id)
+            #print(comment.body)
+            #print(comment.id)
+            #print(comment.parent_id)
+            #print()
+            
+        comment_dict[sub_id] = [sub_comment, parent_ids, comment_ids]
     return comment_dict
 
     
@@ -146,34 +168,55 @@ def create_comment_df(comments):
     id_post = []
     coms = []
     comment_id = []
+    parent_id = []
+    
     for pid, cmnts in comments.items(): 
-        #indeces = []
-        count = list(enumerate(cmnts))
-        # Create unique comment ids 
-        for ent in count: 
-            # Take the index of the comment 
-            com_count = str(ent[0])
-            # And concatenate it to the post_id 
-            com_id = str(pid) + "-" + com_count
-            comment_id.append(com_id)
+        body = cmnts[0]
+        parent = cmnts[1]
+        comid = cmnts[2]
+        
+        for b in body: 
+            coms.append(b)
             id_post.append(pid)
-            coms.append(ent[1])
-        
-    return id_post, comment_id, coms
+            
+        for p in parent: 
+            parent_id.append(p)
+            
+        for c in comid: 
+            comment_id.append(c)
+            
+        #indeces = []
+        # Create unique comment ids 
 
-post_ids, comment_ids, comments = create_comment_df(comment_dict)
+        # Take the index of the comment 
+        # com_count = str(ent[0])
+        # And concatenate it to the post_id 
+        #com_id = str(pid) + "-" + com_count
+        #comment_id.append(com_id)
+    
+        #comment_id.append(cmnts[2])
+        #id_post.append(pid)
+        #coms.append(cmnts[0])
+        #parent_id.append(cmnts[1])
+    
 
-comment_df["post_id"] = post_ids
-comment_df["comment_id"] = comment_ids
-comment_df["comment_body"] = comments
-        
+    return id_post, coms, comment_id, parent_id
+
+id_post, coms, comment_id, parent_id = create_comment_df(comment_dict)
+
+comment_df["post_id"] = id_post
+comment_df["comment_id"] = comment_id
+comment_df["parent_id"] = parent_id
+comment_df["comment_body"] = coms
+
+
 
 # ===================================================================================
 # ============================= PREPROCESSING =======================================
 # ===================================================================================
 
 # --------------------------------- STEP 1 ----------------------------------
-# Retrieving post information (subreddit and title) for each comment
+# Retrieve post information (subreddit and title) for each comment
 # ---------------------------------------------------------------------------
 
 # Extract post_ids from comments Dataframe
@@ -206,6 +249,29 @@ for i in ids_per_comment:
 comment_df["subreddit"] = subs
 comment_df["post_title"] = titles
 
+
+
+# --------------------------------- STEP 2 ----------------------------------
+# Remove bots and deleted comments 
+# Inspired by https://github.com/spaidataiga/RedditPoliticalBias/tree/main/python/Dataset%20Creation
+# ---------------------------------------------------------------------------
+
+# Drop columns with NaN as body text
+comment_df = comment_df.dropna(subset=['comment_body'])
+
+# Remove deleted/removed posts
+comment_df = comment_df[~comment_df['comment_body'].str.contains("removed", na=False)]
+comment_df = comment_df[~comment_df['comment_body'].str.contains(r"deleted", na=False)]
+# Remove posts by bots 
+comment_df = comment_df[~comment_df['comment_body'].str.contains(r"I'?( a)?m a bot")] 
+
+
+# --------------------------------- STEP 3 ----------------------------------
+# Remove duplicates
+# ---------------------------------------------------------------------------
+posts_df = posts_df.drop_duplicates(subset = ["post_id"])
+
+
 # Save new comment Dataframe
 comment_df.to_csv("data/comment_data.csv") 
-
+posts_df.to_csv("data/post_data.csv")
