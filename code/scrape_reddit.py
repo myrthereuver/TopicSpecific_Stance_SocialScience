@@ -4,16 +4,16 @@ import pandas as pd
 import requests
 import json
 
-# TO DO: 
-#   praw_ini_file: https://asyncpraw.readthedocs.io/en/stable/getting_started/configuration/prawini.html#praw-ini 
+# Get access to the Reddit API by following the steps described in https://medium.com/information-expositions/reddit-api-3f9b67c38f19
+# Fill in your information below 
 
-r = praw.Reddit(client_id = "1rtLWKTkLHkFCnowRNiNXg", 
-                client_secret = "7XbN2wa8beCO_ypWKGx9zqoqoP4vxA", 
-                redirect_uri = "https://www.reddit.com/r/europeanunion/", 
-                user_agent = "NLPiscool", 
+r = praw.Reddit(client_id = "", 
+                client_secret = "", 
+                redirect_uri = "", 
+                user_agent = "", 
                 
-                username = "NLPiscool", 
-                password = "DistrustSustainable2022")
+                username = "", 
+                password = "")
 
 
 api = PushshiftAPI(r)
@@ -52,7 +52,6 @@ posts_df = pd.DataFrame(columns = ["id", "subreddit", "title", "num_comments",
 
 def get_pushshift_data(sub, keyword, before, after):
     """
-    
     
     """
     url = "https://api.pushshift.io/reddit/submission/search/?q="+str(keyword)+"&subreddit="+str(sub)+"&before="+str(before)+"&after="+str(after)+"&sort=asc&limit=1000000000000000"
