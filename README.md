@@ -16,5 +16,8 @@ Contains 2.073 Reddit posts
 #### `comment_data.csv`
 Contains 46.285 comments 
 
+#### 'codebook.pdf'
+Contains the first codebook with instructions for the annotated variables
+
 #### `coding.xlsx`
 Contains the first data annotations performed by two coders
