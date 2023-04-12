@@ -1,6 +1,6 @@
 # Argument Mining to Analyze attitudes and beliefs on Sustainable Initiatives
 
-This repository contains the code that was used to scrape posts and comments about sustainable initiatives on Reddit. The resulting (preliminary) dataset is presented in an extended abstract for ICA (2022).
+This repository contains the code that was used to scrape posts and comments about sustainable initiatives on Reddit. The resulting (preliminary) dataset is presented in an extended abstract for ICA (2023).
 
 ### `code`
 #### `scrape_reddit`
