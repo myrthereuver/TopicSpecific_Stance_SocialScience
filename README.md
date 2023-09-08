@@ -1,6 +1,9 @@
-# Argument Mining to Analyze attitudes and beliefs on Sustainable Initiatives
+# Topic-specific social science theory in stance detection: a pilot study and dataset on sustainability initatives
 
-This repository contains the code that was used to scrape posts and comments about sustainable initiatives on Reddit. The resulting (preliminary) dataset is presented in an extended abstract for ICA (2023).
+This repository contains:
+- Scraping: the code that was used to scrape posts and comments about sustainable initiatives on Reddit.
+- Annotating: The input data to the annotation tasks, codebook versions, and annotation task designs;
+- (Pre)processing code to obtain a clean dataset from the annotions, calculate Inter-Annotator Agreement, and majority labels.
 
 ### `code`
 #### `scrape_reddit`
