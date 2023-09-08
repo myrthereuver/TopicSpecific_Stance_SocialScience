@@ -1,9 +1,11 @@
 # Topic-specific social science theory in stance detection: a pilot study and dataset on sustainability initatives
 
-This repository contains:
+This repository contains code, data, and documentations to complete:
 - Scraping: the code that was used to scrape posts and comments about sustainable initiatives on Reddit.
 - Annotating: The input data to the annotation tasks, codebook versions, and annotation task designs;
-- (Pre)processing code to obtain a clean dataset from the annotions, calculate Inter-Annotator Agreement, and majority labels.
+- (Pre)processing: code to obtain a clean dataset from the annotions, calculate Inter-Annotator Agreement, and majority labels.
+
+for the paper "Topic-specific social science theory in stance detection: a pilot study and dataset on sustainability initatives"
 
 ### `code`
 #### `scrape_reddit`
