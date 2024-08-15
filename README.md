@@ -1,7 +1,6 @@
 # Topic-specific social science theory in stance detection: a proposal and interdisciplinary pilot study on sustainability initiatives
 
-### This repository contains the code and documents for the paper "Topic-specific social science theory in stance detection: a proposal and interdisciplinary pilot study on sustainability initiatives",
-### authors: Myrthe Reuver, Alessandra Polimeno, Antske Fokkens, Ana Isabel Lopes. Published at the 4th Workshop on Computational Linguistics for the Political and Social Sciences (CPSS) at KONVENS, 13 September 2024.
+#### This repository contains the code and documents for the paper "Topic-specific social science theory in stance detection: a proposal and interdisciplinary pilot study on sustainability initiatives", authors: Myrthe Reuver, Alessandra Polimeno, Antske Fokkens, Ana Isabel Lopes. Published at the 4th Workshop on Computational Linguistics for the Political and Social Sciences (CPSS) at KONVENS, 13 September 2024.
 #### contact: Myrthe Reuver, myrthe[fullstop]reuver[at]vu.nl
 
 The datasets in this paper are the "Reddit European Sustainability Initiatives corpus" and the annotated subset of this corpus, released (under CC-BY-NC licence) through the following huggingface repository: [Myrthe/RedditEuropeanSustainabilityInitiatives](https://huggingface.co/datasets/Myrthe/RedditEuropeanSustainabilityInitiatives).
