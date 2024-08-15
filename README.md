@@ -20,13 +20,6 @@ Retrieves the posts and comments that contain the selected keywords, and perform
 #### `word2vec.py`
 Can be used to obtain semantically similar words to a query with the Google News word2vec embeddings and the Glove GigaWord corpus.
 
-### `scraped data`
-#### `post_data.csv`
-Contains the scraped 2.073 Reddit posts
-
-#### `comment_data.csv`
-Contains the scraped 46.285 comments 
-
 ### `annotating`
 #### 'Codebook_data.pdf'
 Contains the first codebook with instructions written for the expert coding session for the annotated variables.
