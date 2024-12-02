@@ -14,18 +14,18 @@ This repository contains code, data, and documentations to complete:
 
 Code subsections:
 
-### (1) `scraping`
+### (1) `Scraping`
 #### `scrape_reddit`
 Retrieves the posts and comments that contain the selected keywords, and performs a number of preprocessing steps such as filtering comments made by bots.
 
 #### `word2vec.py`
 Can be used to obtain semantically similar words to a query with the Google News word2vec embeddings and the Glove GigaWord corpus.
 
-### (2) `annotating`
+### (2) `Annotating`
 #### 'AnnotationGuidelines_SustainabilityArguments.pdf'
 Contains the final codebook with instructions for the crowd annotating the 91 sample data points.
 
-### (3) `(Pre)Processing`
+### (3) `Data (Pre)Processing`
 The 'annotator_agreement' folder contains notebooks that analyze the output of the crowd task and the expert coder task for inter annotator agreement, as well as preprocess it into an annotated dataset.
 
 ### (4) `Modelling and Data Analysis`
