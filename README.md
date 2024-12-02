@@ -25,6 +25,9 @@ Can be used to obtain semantically similar words to a query with the Google News
 #### 'AnnotationGuidelines_SustainabilityArguments.pdf'
 Contains the final codebook with instructions for the crowd annotating the 91 sample data points.
 
+#### Qualtrics Templates
+The qualtrics templates, which toegether with the data in the HuggingFace repository can be used to re-create the annotation experiments, are provided in the folder "data" under "Qualtrics templates"
+
 ### (3) `Data (Pre)Processing`
 The 'annotator_agreement' folder contains notebooks that analyze the output of the crowd task and the expert coder task for inter annotator agreement, as well as preprocess it into an annotated dataset.
 
