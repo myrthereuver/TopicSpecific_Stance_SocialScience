@@ -33,4 +33,5 @@ The 'annotator_agreement' folder contains notebooks that analyze the output of t
 
 ### (4) `Modelling and Data Analysis`
 The 'exploratory_notebooks' folder contains code for our exploration of the Reddit corpus, which was mostly done through clustering and BERTopic models and described in the appendix of our paper.
+
 The 'models' folder contains the version of the BERTopic model used to analyze the dataset as described in the appendix of our paper.
